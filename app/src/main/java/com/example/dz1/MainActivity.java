@@ -1,7 +1,13 @@
 package com.example.dz1;
 
+import android.content.res.Configuration;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -12,35 +18,39 @@ import android.widget.TextClock;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    ArrayList<String> countries = new ArrayList<String>();
-    String[] countriesmass= { "Бразилия", "Аргентина", "Колумбия", "Чили", "Уругвай"};
+    ArrayList<Integer> elements = new ArrayList<>();
+
+    void SetItems(ArrayList<Integer> arLst){
+        for (int i = 0; i<100; i++){
+            arLst.add(i);
+        }
+    }
+
+    int NumOfColum(){
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
+            return 3;
+        else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+            return 4;
+        else
+            return 1;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        SetItems(elements);
+        Log.d("TAG", "!!!!!!!!!!!!!!!!!!!" + elements.get(1) );
 
-        final TextView textView = findViewById(R.id.txtBox);
-        Button button = findViewById(R.id.btnAdd);
+        RecyclerView recyclerView = findViewById(R.id.rvNumbers);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this)); //Либо в разметке, как атрибут recyclerView app:layoutManager="LinearLayoutManager"
 
-        for (String s:countriesmass) {
-            countries.add(s);
-        }
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String text = textView.getText().toString();
-                if (text != null){
-                    countries.add(text);
-                }
+        recyclerView.setLayoutManager(new GridLayoutManager(this, NumOfColum()));
+        recyclerView.setAdapter( new DataAdapter(elements, this));
 
-            }
-        });
-        ListView listView = (ListView) findViewById(R.id.countriesList);
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, countries);
-        listView.setAdapter(arrayAdapter);
     }
 }
