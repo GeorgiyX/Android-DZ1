@@ -1,5 +1,6 @@
 package com.example.dz1;
 
+import android.content.Context;
 import android.content.res.Configuration;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -30,6 +31,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    void AddItem(ArrayList<Integer> arLst){
+        arLst.add(arLst.get(arLst.size()-1)+1);
+    }
+
     int NumOfColum(){
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
             return 3;
@@ -44,13 +49,23 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         SetItems(elements);
-        Log.d("TAG", "!!!!!!!!!!!!!!!!!!!" + elements.get(1) );
 
-        RecyclerView recyclerView = findViewById(R.id.rvNumbers);
+        final RecyclerView recyclerView = findViewById(R.id.rvNumbers);
         recyclerView.setLayoutManager(new LinearLayoutManager(this)); //Либо в разметке, как атрибут recyclerView app:layoutManager="LinearLayoutManager"
 
         recyclerView.setLayoutManager(new GridLayoutManager(this, NumOfColum()));
         recyclerView.setAdapter( new DataAdapter(elements, this));
+
+        final Context context = this;
+        Button button = findViewById(R.id.btn_add);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AddItem(elements);
+                Log.d("INFO", "В обработчике клика " + elements.size());
+                recyclerView.setAdapter( new DataAdapter(elements, context));
+            }
+        });
 
     }
 }

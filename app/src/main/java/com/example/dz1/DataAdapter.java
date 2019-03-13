@@ -1,6 +1,8 @@
 package com.example.dz1;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -12,22 +14,14 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.zip.Inflater;
 
-//Находит вьюхи, используется один раз ?, тем самым улучшает производительность
-class ViewHolderCustom extends RecyclerView.ViewHolder{
+import static android.provider.Telephony.Mms.Part.TEXT;
 
-    TextView mTextView;
 
-    public ViewHolderCustom(@NonNull View itemView) {
-        super(itemView);
-        Log.d("INVOKE", "ViewHolderCustom вызван" );
-        mTextView = itemView.findViewById(R.id.textEl);
-    }
-}
-
-public class DataAdapter extends RecyclerView.Adapter<ViewHolderCustom>{
+public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolderCustom>{
 
     ArrayList<Integer> mItems;
     Context mContext;
+
 
     public DataAdapter(ArrayList<Integer> items, Context context){
         mItems = items;
@@ -45,7 +39,7 @@ public class DataAdapter extends RecyclerView.Adapter<ViewHolderCustom>{
         //        attachToRoot – присоединять ли создаваемый View к root. Если true, то root становится родителем создаваемого View.
         //        Т.е. это равносильно команде root.addView(View).  Если false – то создаваемый View просто получает LayoutParams от root, но его дочерним элементом не становится.
         View view = layoutInflater.inflate(R.layout.list_item, viewGroup, false);
-        Log.d("CREATE", "Создан элемент на позиции " + i);
+        Log.d("CREATE", "Создан элемент");
 
         return new ViewHolderCustom(view);
     }
@@ -66,5 +60,27 @@ public class DataAdapter extends RecyclerView.Adapter<ViewHolderCustom>{
     @Override
     public int getItemCount() {
         return mItems.size();
+    }
+
+    //Находит вьюхи, используется один раз ?, тем самым улучшает производительность
+    public class ViewHolderCustom extends RecyclerView.ViewHolder{
+
+        TextView mTextView;
+
+        public ViewHolderCustom(@NonNull View itemView) {
+            super(itemView);
+            Log.d("INVOKE", "ViewHolderCustom вызван" );
+            mTextView = itemView.findViewById(R.id.textEl);
+            final String NUM = "NUM";
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(mContext, ItemActivity.class);
+                    intent.putExtra(NUM, Integer.toString(mItems.get(getAdapterPosition())));
+                    mContext.startActivity(intent);
+                }
+            });
+        }
     }
 }
