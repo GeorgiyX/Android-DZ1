@@ -23,6 +23,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String KEY_ELEMENTS = "ELEMENTS";
     ArrayList<Integer> elements = new ArrayList<>();
 
     void SetItems(ArrayList<Integer> arLst){
@@ -48,24 +49,32 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        SetItems(elements);
+        if (savedInstanceState !=null){
+            elements = savedInstanceState.getIntegerArrayList(KEY_ELEMENTS);
+        }
+        else SetItems(elements);
 
         final RecyclerView recyclerView = findViewById(R.id.rvNumbers);
         recyclerView.setLayoutManager(new LinearLayoutManager(this)); //Либо в разметке, как атрибут recyclerView app:layoutManager="LinearLayoutManager"
-
         recyclerView.setLayoutManager(new GridLayoutManager(this, NumOfColum()));
-        recyclerView.setAdapter( new DataAdapter(elements, this));
 
-        final Context context = this;
+        final DataAdapter dataAdapter = new DataAdapter(elements, this);
+        recyclerView.setAdapter(dataAdapter);
+
         Button button = findViewById(R.id.btn_add);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AddItem(elements);
-                Log.d("INFO", "В обработчике клика " + elements.size());
-                recyclerView.setAdapter( new DataAdapter(elements, context));
+                dataAdapter.notifyItemInserted(elements.size()-1);
             }
         });
+    }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putIntegerArrayList(KEY_ELEMENTS, elements);
     }
 }
