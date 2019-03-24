@@ -21,25 +21,20 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolderCust
 
     ArrayList<Integer> mItems;
     Context mContext;
+    ItemClickListener mItemClickListener;
 
 
-    public DataAdapter(ArrayList<Integer> items, Context context){
+    public DataAdapter(ArrayList<Integer> items, Context context, ListFragment fragmentContext){
         mItems = items;
-        mContext=context;
+        mContext = context;
+        mItemClickListener = (ItemClickListener) fragmentContext;
     }
 
     @NonNull
     @Override
     public ViewHolderCustom onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) { //Для чего i?
-        //LayoutInflater – это класс, который умеет из содержимого layout-файла создать View-элемент. Метод который это делает называется inflate.
-        LayoutInflater layoutInflater = LayoutInflater.from(viewGroup.getContext()); //Можно было передать и сохранить контекст в конструкторе
-        //        Как видим, на вход метод принимает три параметра:
-        //        resource - ID layout-файла, который будет использован для создания View. Например - R.layout.main
-        //        root – родительский ViewGroup-элемент для создаваемого View. LayoutParams от этого ViewGroup присваиваются создаваемому View.
-        //        attachToRoot – присоединять ли создаваемый View к root. Если true, то root становится родителем создаваемого View.
-        //        Т.е. это равносильно команде root.addView(View).  Если false – то создаваемый View просто получает LayoutParams от root, но его дочерним элементом не становится.
+        LayoutInflater layoutInflater = LayoutInflater.from(viewGroup.getContext());
         View view = layoutInflater.inflate(R.layout.list_item, viewGroup, false);
-        Log.d("CREATE", "Создан элемент");
 
         return new ViewHolderCustom(view);
     }
@@ -54,7 +49,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolderCust
             viewHolderCustom.mTextView.setTextColor(mContext.getResources().getColor(R.color.colorBlue));
         }
         viewHolderCustom.mTextView.setText(Integer.toString(num));
-        Log.d("SET", " Установлен элемент на позиции " + position);
+//        Log.d("SET", " Установлен элемент на позиции " + position);
     }
 
     @Override
@@ -62,25 +57,24 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolderCust
         return mItems.size();
     }
 
-    //Находит вьюхи, используется один раз ?, тем самым улучшает производительность
     public class ViewHolderCustom extends RecyclerView.ViewHolder{
 
         TextView mTextView;
 
         public ViewHolderCustom(@NonNull View itemView) {
             super(itemView);
-            Log.d("INVOKE", "ViewHolderCustom вызван" );
+//            Log.d("INVOKE", "ViewHolderCustom вызван" );
             mTextView = itemView.findViewById(R.id.textEl);
-            final String NUM = "NUM";
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(mContext, ItemActivity.class);
-                    intent.putExtra(NUM, Integer.toString(mItems.get(getAdapterPosition())));
-                    mContext.startActivity(intent);
+                    mItemClickListener.onItemClick(getAdapterPosition());
                 }
             });
         }
+    }
+    public interface ItemClickListener{
+        void onItemClick(int position);
     }
 }
