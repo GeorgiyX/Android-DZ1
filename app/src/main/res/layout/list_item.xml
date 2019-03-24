@@ -6,6 +6,8 @@
     android:layout_width="80dp"
     android:layout_height="80dp">
     <TextView
+        android:minHeight="48dp"
+        android:minWidth="48dp"
         android:id="@+id/textEl"
         android:gravity="center"
         android:layout_width="match_parent"
