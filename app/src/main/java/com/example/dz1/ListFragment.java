@@ -23,7 +23,7 @@ public class ListFragment extends Fragment implements DataAdapter.ItemClickListe
     View rootView;
 
     void setItems(ArrayList<Integer> arLst){
-        for (int i = 0; i<100; i++){
+        for (int i = 1; i<101; i++){
             arLst.add(i);
         }
     }
