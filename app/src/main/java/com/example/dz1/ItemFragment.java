@@ -1,10 +1,8 @@
 package com.example.dz1;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,16 +21,12 @@ public class ItemFragment extends Fragment {
         setText(getNum());
         return rootView;
     }
-    public void setText(int num){
-        if (num%2==0){
-            textView.setTextColor(getResources().getColor(R.color.colorAccent));
-        }
-        else {
-            textView.setTextColor(getResources().getColor(R.color.colorBlue));
-        }
-        textView.setText(Integer.toString(num));
+
+    public void setText(int num) {
+        ColorResolver.setColorAndNum(textView, num, (Context) getActivity());
     }
-    public int getNum(){
+
+    public int getNum() {
         Bundle bundle = getArguments();
         int num = bundle != null ? bundle.getInt(KEY_NUM) : 0;
         return num;

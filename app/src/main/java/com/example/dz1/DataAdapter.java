@@ -1,33 +1,26 @@
 package com.example.dz1;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.zip.Inflater;
-
-import static android.provider.Telephony.Mms.Part.TEXT;
 
 
-public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolderCustom>{
+public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolderCustom> {
 
     ArrayList<Integer> mItems;
     Context mContext;
     ItemClickListener mItemClickListener;
 
-
-    public DataAdapter(ArrayList<Integer> items, Context context, ListFragment fragmentContext){
+    public DataAdapter(ArrayList<Integer> items, Context context, ItemClickListener fragmentContext) {
         mItems = items;
         mContext = context;
-        mItemClickListener = (ItemClickListener) fragmentContext;
+        mItemClickListener = fragmentContext;
     }
 
     @NonNull
@@ -42,13 +35,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolderCust
     @Override
     public void onBindViewHolder(@NonNull ViewHolderCustom viewHolderCustom, int position) {
         Integer num = mItems.get(position);
-        if (num%2==0){
-            viewHolderCustom.mTextView.setTextColor(mContext.getResources().getColor(R.color.colorAccent));
-        }
-        else {
-            viewHolderCustom.mTextView.setTextColor(mContext.getResources().getColor(R.color.colorBlue));
-        }
-        viewHolderCustom.mTextView.setText(Integer.toString(num));
+        ColorResolver.setColorAndNum(viewHolderCustom.mTextView, num, mContext);
 //        Log.d("SET", " Установлен элемент на позиции " + position);
     }
 
@@ -57,7 +44,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolderCust
         return mItems.size();
     }
 
-    public class ViewHolderCustom extends RecyclerView.ViewHolder{
+    public class ViewHolderCustom extends RecyclerView.ViewHolder {
 
         TextView mTextView;
 
@@ -74,7 +61,8 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolderCust
             });
         }
     }
-    public interface ItemClickListener{
+
+    public interface ItemClickListener {
         void onItemClick(int position);
     }
 }

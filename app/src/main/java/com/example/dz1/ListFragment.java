@@ -6,9 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,18 +20,18 @@ public class ListFragment extends Fragment implements DataAdapter.ItemClickListe
     OnFragmentInteractionListener onFragmentInteractionListener;
     View rootView;
 
-    void setItems(ArrayList<Integer> arLst){
-        for (int i = 1; i<101; i++){
+    void setItems(ArrayList<Integer> arLst) {
+        for (int i = 1; i < 101; i++) {
             arLst.add(i);
         }
     }
 
-    void addItem(ArrayList<Integer> arLst){
-        arLst.add(arLst.get(arLst.size()-1)+1);
+    void addItem(ArrayList<Integer> arLst) {
+        arLst.add(arLst.get(arLst.size() - 1) + 1);
     }
 
-    int numOfColum(){
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
+    int numOfColum() {
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
             return 3;
         else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
             return 4;
@@ -44,18 +42,17 @@ public class ListFragment extends Fragment implements DataAdapter.ItemClickListe
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        if (rootView!=null){
-            if((ViewGroup)rootView.getParent()!=null){
+        if (rootView != null) {
+            if ((ViewGroup) rootView.getParent() != null) {
                 ((ViewGroup) rootView.getParent()).removeView(rootView);
             }
             return rootView;
         }
 
         rootView = inflater.inflate(R.layout.fragment_list, container, false);
-        if (savedInstanceState !=null){
+        if (savedInstanceState != null) {
             elements = savedInstanceState.getIntegerArrayList(KEY_ELEMENTS);
-        }
-        else setItems(elements);
+        } else setItems(elements);
 
         final RecyclerView recyclerView = rootView.findViewById(R.id.rvNumbers);
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), numOfColum()));
@@ -63,11 +60,11 @@ public class ListFragment extends Fragment implements DataAdapter.ItemClickListe
         final DataAdapter dataAdapter = new DataAdapter(elements, getActivity(), this);
         recyclerView.setAdapter(dataAdapter);
 
-        rootView.findViewById(R.id.btn_add).setOnClickListener(new View.OnClickListener() {
+        rootView.findViewById(R.id.btnAdd).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addItem(elements);
-                dataAdapter.notifyItemInserted(elements.size()-1);
+                dataAdapter.notifyItemInserted(elements.size() - 1);
             }
         });
         return rootView;
@@ -90,7 +87,7 @@ public class ListFragment extends Fragment implements DataAdapter.ItemClickListe
         onFragmentInteractionListener.onFragmentInteraction(elements.get(position));
     }
 
-    interface OnFragmentInteractionListener{
+    interface OnFragmentInteractionListener {
         void onFragmentInteraction(int num);
     }
 }
